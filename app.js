@@ -13,6 +13,17 @@ router.get('/', async (ctx) => {
 app.use(router.routes())
 app.use(router.allowedMethods())
 
+app.use(async (context, next) => {
+  try {
+    await context.send({
+      root: `${Deno.cwd()}/static`,
+      index: "index.html",
+    });
+  } catch {
+    await next()
+  }
+})
+
 app.addEventListener(
   "listen",
   (e) => console.log("Listening on http://localhost:8000")
