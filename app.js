@@ -1,25 +1,17 @@
 // app.js
 
 import { Application, Router } from "https://deno.land/x/oak/mod.ts"
+import html from "./views/index.jsx"
 
-import { 
-  viewEngine, 
-  ejsEngine, 
-  oakAdapter
-} from "https://deno.land/x/view_engine@v10.5.1/mod.ts"
+const app = new Application({keys: ["secret1"]})
+const router = new Router()
 
-
-const app = new Application();
-
-app.use(
-  viewEngine(oakAdapter, ejsEngine, {
-    viewRoot: "./views",
-  })
-);
-
-app.use(async (ctx, next) => {
-  ctx.render("index.ejs", {data: { name: "Sokhavuth" }} );
-});
+router.get('/', async (ctx) => {
+  ctx.response.body = html
+})
+ 
+app.use(router.routes())
+app.use(router.allowedMethods())
 
 app.addEventListener(
   "listen",
